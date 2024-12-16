@@ -57,9 +57,9 @@ export class CalculatorApp extends LitElement {
         name="solo"
         .checked=${order.solo}
         @change=${() => {
-          this.order.solo = true;
-          this.updatePrice();
-        }}
+        this.order.solo = true;
+        this.updatePrice();
+      }}
       />
       <label for="solo-yes">Yes</label>
 
@@ -69,9 +69,9 @@ export class CalculatorApp extends LitElement {
         name="solo"
         .checked=${!order.solo}
         @change=${() => {
-          this.order.solo = false;
-          this.updatePrice();
-        }}
+        this.order.solo = false;
+        this.updatePrice();
+      }}
       />
       <label for="solo-no">No</label>
 
@@ -83,30 +83,31 @@ export class CalculatorApp extends LitElement {
         min="1"
         .value=${order.credits}
         @input=${(e) => {
-          this.order.credits = parseInt(e.target.value);
-          this.updatePrice();
-        }}
+        this.order.credits = parseInt(e.target.value);
+        this.updatePrice();
+      }}
       />
       ${price.credits} €
 
       <div>
-        <strong>Machines:</strong> ${price.nodes} €
+        <strong>Machines:</strong>
         <div>
           ${order.machines.map(
-            (machine, index) => html`
+        (machine, index) => html`
               <div>
                 Machine ${index + 1}: ${machine.cores} cores${machine.floating ? ' (floating)' : ''}
                 <button
                   @click=${() => {
-                    this.order.machines.splice(index, 1);
-                    this.updatePrice();
-                  }}
+            this.order.machines.splice(index, 1);
+            this.updatePrice();
+          }}
                 >
                   Remove
                 </button>
+                ${machine.price} €
               </div>
             `,
-          )}
+      )}
         </div>
 
         <div>
@@ -117,16 +118,16 @@ export class CalculatorApp extends LitElement {
             id="cores"
             .value=${this.newMachine.cores}
             @input=${(e) => {
-              this.newMachine.cores = parseInt(e.target.value);
-            }}
+        this.newMachine.cores = parseInt(e.target.value);
+      }}
           />
           <input
             type="checkbox"
             id="floating"
             checked=${this.newMachine.floating}
             @change=${(e) => {
-              this.newMachine.floating = e.target.checked;
-            }}
+        this.newMachine.floating = e.target.checked;
+      }}
           />
           <label for="floating">Floating</label>
 

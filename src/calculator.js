@@ -14,21 +14,18 @@ const bundles = [
 ];
 
 export function calculatePrice(order) {
-  const cores = order.machines.filter((m) => !m.floating).reduce((sum, m) => sum + m.cores, 0);
-  const floatingCores = order.machines
-    .filter((m) => m.floating)
-    .reduce((sum, m) => sum + m.cores, 0);
-  const nodes = Math.ceil(cores / 32);
-  const floatingNodes = Math.ceil(floatingCores / 32);
-  // Each floating node costs twice as much as a regular node:
-  const totalNodes = nodes + 2 * floatingNodes;
+  for (const machine of order.machines) {
+    machine.nodes = Math.ceil(machine.cores / 32);
+    machine.price = (machine.floating ? 2 : 1) * machine.nodes * prices.node;
+  }
+  const nodePrice = order.machines.reduce((total, machine) => total + machine.price, 0);
   const relevantBundles = order.solo ? bundles : bundles.filter((bundle) => !bundle.solo);
-  const totalPrice = order.credits * prices.credit + totalNodes * prices.node;
+  const totalPrice = order.credits * prices.credit + nodePrice;
 
   const bestBundle = relevantBundles.reduce(
     (best, bundle) => {
       const credits = Math.max(bundle.credits, order.credits);
-      const nodes = Math.max(bundle.nodes, totalNodes);
+      const nodes = Math.max(bundle.nodes, nodePrice / prices.node);
       const bundlePrice = credits * prices.credit + nodes * prices.node - bundle.discount;
       return bundlePrice < best.total
         ? { total: bundlePrice, discount: totalPrice - bundlePrice, bundle }
@@ -40,6 +37,6 @@ export function calculatePrice(order) {
   return {
     ...bestBundle,
     credits: order.credits * prices.credit,
-    nodes: totalNodes * prices.node,
+    nodes: nodePrice,
   };
 }
