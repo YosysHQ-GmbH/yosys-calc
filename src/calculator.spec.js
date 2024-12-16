@@ -1,13 +1,15 @@
 import { calculatePrice } from './calculator.js';
-import { expect, describe, test } from 'vitest'
+import { expect, describe, test } from 'vitest';
 
 describe('calculatePrice', () => {
   test('solo bundle', () => {
-    expect(calculatePrice({
-      solo: true,
-      credits: 2,
-      machines: [{ cores: 1, floating: false }], // 1 node
-    })).toEqual({
+    expect(
+      calculatePrice({
+        solo: true,
+        credits: 2,
+        machines: [{ quantity: 1, cores: 1, floating: false }], // 1 node
+      }),
+    ).toEqual({
       credits: 1000,
       nodes: 300,
       total: 700,
@@ -17,11 +19,13 @@ describe('calculatePrice', () => {
   });
 
   test('no discount', () => {
-    expect(calculatePrice({
-      solo: false,
-      credits: 1,
-      machines: [{ cores: 1, floating: true }], // 1 floating node
-    })).toEqual({
+    expect(
+      calculatePrice({
+        solo: false,
+        credits: 1,
+        machines: [{ quantity: 1, cores: 1, floating: true }], // 1 floating node
+      }),
+    ).toEqual({
       credits: 500,
       nodes: 600,
       total: 1100,
@@ -31,11 +35,13 @@ describe('calculatePrice', () => {
   });
 
   test('team bundle', () => {
-    expect(calculatePrice({
-      solo: false,
-      credits: 3,
-      machines: [{ cores: 15 * 32, floating: false }], // 15 nodes
-    })).toEqual({
+    expect(
+      calculatePrice({
+        solo: false,
+        credits: 3,
+        machines: [{ quantity: 1, cores: 15 * 32, floating: false }], // 15 nodes
+      }),
+    ).toEqual({
       credits: 1500,
       nodes: 4500,
       total: 4500,
@@ -45,11 +51,13 @@ describe('calculatePrice', () => {
   });
 
   test('team bundle + 500', () => {
-    expect(calculatePrice({
-      solo: false,
-      credits: 5,
-      machines: [{ cores: 15 * 32, floating: false }], // 15 nodes
-    })).toEqual({
+    expect(
+      calculatePrice({
+        solo: false,
+        credits: 5,
+        machines: [{ quantity: 1, cores: 15 * 32, floating: false }], // 15 nodes
+      }),
+    ).toEqual({
       credits: 2500,
       nodes: 4500,
       total: 5000,

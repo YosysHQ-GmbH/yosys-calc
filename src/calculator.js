@@ -16,7 +16,7 @@ const bundles = [
 export function calculatePrice(order) {
   for (const machine of order.machines) {
     machine.nodes = Math.ceil(machine.cores / 32);
-    machine.price = (machine.floating ? 2 : 1) * machine.nodes * prices.node;
+    machine.price = machine.quantity * (machine.floating ? 2 : 1) * machine.nodes * prices.node;
   }
   const nodePrice = order.machines.reduce((total, machine) => total + machine.price, 0);
   const relevantBundles = order.solo ? bundles : bundles.filter((bundle) => !bundle.solo);
