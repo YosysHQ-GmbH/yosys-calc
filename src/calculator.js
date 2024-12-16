@@ -4,7 +4,7 @@ const prices = {
 };
 
 const bundles = [
-  { name: 'Solo Bundle', credits: 2, nodes: 1, discount: 600, solo: true },
+  { name: 'Solo Bundle', credits: 1, nodes: 2, discount: 600, solo: true },
   { name: 'Entry Bundle', credits: 4, nodes: 4, discount: 1300 },
   { name: 'Dev Bundle', credits: 8, nodes: 5, discount: 1600 },
   { name: 'Team Bundle', credits: 4, nodes: 15, discount: 2000 },

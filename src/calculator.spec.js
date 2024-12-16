@@ -6,13 +6,13 @@ describe('calculatePrice', () => {
     expect(
       calculatePrice({
         solo: true,
-        credits: 2,
-        machines: [{ quantity: 1, cores: 1, floating: false }], // 1 node
+        credits: 1,
+        machines: [{ quantity: 2, cores: 1, floating: false }], // 1 node
       }),
     ).toEqual({
-      credits: 1000,
-      nodes: 300,
-      total: 700,
+      credits: 500,
+      nodes: 600,
+      total: 500,
       discount: 600,
       bundle: expect.objectContaining({ name: 'Solo Bundle' }),
     });
