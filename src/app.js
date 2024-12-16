@@ -139,7 +139,7 @@ export class CalculatorApp extends LitElement {
 
         <hr />
 
-        <div>Discount: ${price.discount} €</div>
+        <div>Discount: ${price.discount} € ${price.bundle?.name}</div>
         <div>Total: ${price.total} € / month</div>
       </div>
     `;
