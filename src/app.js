@@ -5,7 +5,6 @@ export class CalculatorApp extends LitElement {
   static properties = {
     order: { state: true },
     price: { state: true },
-    newMachine: { state: true },
   };
 
   constructor() {
@@ -13,7 +12,9 @@ export class CalculatorApp extends LitElement {
     this.order = {
       solo: false,
       credits: 1,
-      machines: [],
+      machines: [
+        { cores: 8, floating: false },
+      ],
     };
 
     this.price = {
@@ -21,10 +22,6 @@ export class CalculatorApp extends LitElement {
       total: 0,
     };
 
-    this.newMachine = {
-      cores: '',
-      floating: false,
-    };
     this.updatePrice();
   }
 
@@ -34,12 +31,7 @@ export class CalculatorApp extends LitElement {
   }
 
   addMachine() {
-    if (this.newMachine.cores === '' || this.newMachine.cores <= 0) {
-      return;
-    }
-
-    this.order.machines.push({ ...this.newMachine });
-    this.newMachine = { cores: 2, floating: false };
+    this.order.machines.push({ cores: 8, floating: false });
     this.updatePrice();
   }
 
@@ -95,7 +87,29 @@ export class CalculatorApp extends LitElement {
           ${order.machines.map(
         (machine, index) => html`
               <div>
-                Machine ${index + 1}: ${machine.cores} cores${machine.floating ? ' (floating)' : ''}
+                Machine ${index + 1}: <label for="cores">Cores:</label>
+                <input
+                  type="number"
+                  min="1"
+                  style="width: 50px"
+                  id="cores"
+                  .value=${machine.cores}
+                  @input=${(e) => {
+            machine.cores = parseInt(e.target.value);
+            this.updatePrice();
+          }}
+                />
+                <input
+                  type="checkbox"
+                  id="floating"
+                  checked=${machine.floating}
+                  @change=${(e) => {
+            machine.floating = e.target.checked;
+            this.updatePrice();
+          }}
+                />
+                <label for="floating">Floating</label>
+
                 <button
                   @click=${() => {
             this.order.machines.splice(index, 1);
@@ -111,27 +125,7 @@ export class CalculatorApp extends LitElement {
         </div>
 
         <div>
-          <label for="cores">Cores:</label>
-          <input
-            type="number"
-            min="1"
-            id="cores"
-            .value=${this.newMachine.cores}
-            @input=${(e) => {
-        this.newMachine.cores = parseInt(e.target.value);
-      }}
-          />
-          <input
-            type="checkbox"
-            id="floating"
-            checked=${this.newMachine.floating}
-            @change=${(e) => {
-        this.newMachine.floating = e.target.checked;
-      }}
-          />
-          <label for="floating">Floating</label>
-
-          <button @click=${this.addMachine} type="button">Add</button>
+          <button @click=${this.addMachine} type="button">Add machine</button>
         </div>
 
         <hr />
