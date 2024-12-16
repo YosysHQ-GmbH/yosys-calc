@@ -80,6 +80,7 @@ export class CalculatorApp extends LitElement {
       Support credits:
       <input
         type="number"
+        min="1"
         .value=${order.credits}
         @input=${(e) => {
           this.order.credits = parseInt(e.target.value);
@@ -112,6 +113,7 @@ export class CalculatorApp extends LitElement {
           <label for="cores">Cores:</label>
           <input
             type="number"
+            min="1"
             id="cores"
             .value=${this.newMachine.cores}
             @input=${(e) => {
