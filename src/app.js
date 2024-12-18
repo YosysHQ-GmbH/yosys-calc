@@ -12,34 +12,72 @@ export class CalculatorApp extends LitElement {
       font-size: 14.67px;
     }
 
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
     h2 {
       color: #d6368f;
     }
 
-    th {
-      text-align: left;
-    }
-
-    td.machine-row {
+    .machine-row {
       padding-left: 2em;
       padding-right: 2em;
     }
     @media (max-width: 600px) {
-      td.machine-row {
+      .machine-row {
         padding-left: 0.5em;
         padding-right: 0.5em;
       }
     }
 
     input[type='number'] {
-      width: 3em;
+      width: 4em;
+      height: 28px;
+    }
+    @media (max-width: 600px) {
+      input[type='number'] {
+        width: 3em;
+      }
+    }
+
+    .grid-span-row {
+      grid-column: span 3;
+    }
+
+    .grid-separator {
+      margin-top: 0.5em;
+      grid-column: 1 / -1;
+      border-top: 1px solid #000;
+    }
+
+    .grid-container {
+      display: inline-grid;
+      grid-template-columns: 1fr 2.5fr 1fr;
+      gap: 1em 1em;
+      align-items: center;
+    }
+
+    .grid-container > summary {
+      display: grid;
+      grid-column: 1/-1;
+      grid-template-columns: subgrid;
+      background-color: #f0f0f0;
+      padding: 0.5em 0;
+    }
+
+    .grid-header {
+      font-weight: bold;
     }
 
     button.remove-button {
       cursor: pointer;
       border: none;
-      width: 20px;
-      height: 20px;
+      width: 28px;
+      height: 28px;
+      margin-right: 0.5em;
       background-color: black;
       -webkit-mask: url(icons/remove.svg) no-repeat center;
       mask: url(icons/remove.svg) no-repeat center;
@@ -52,17 +90,18 @@ export class CalculatorApp extends LitElement {
     button.add-machine {
       cursor: pointer;
       border: none;
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       background-color: #0a0;
       color: white;
       background-color: black;
       -webkit-mask: url(icons/add.svg) no-repeat center;
       mask: url(icons/add.svg) no-repeat center;
       text-indent: -9999px;
+      background-color: #4b72b8;
     }
     button.add-machine:hover {
-      background-color: #4b72b8;
+      background-color: #6ecbd7;
     }
 
     .machine-details {
@@ -71,6 +110,7 @@ export class CalculatorApp extends LitElement {
 
     .machine-details label {
       margin-right: 0.5em;
+      line-height: 28px;
     }
 
     .machine-details input {
@@ -146,105 +186,93 @@ export class CalculatorApp extends LitElement {
 
       <h2>What you need</h2>
 
-      <table>
-        <colgroup>
-          <col style="width: 8em;" />
-          <col style="width: 17em;" />
-        </colgroup>
-        <tr>
-          <th>Support credits:</th>
-          <td>
-            <input
-              type="number"
-              min="1"
-              .value=${order.credits}
-              @input=${(e) => {
-                this.order.credits = parseInt(e.target.value);
-                this.updatePrice();
-              }}
-            />
-          </td>
-          <td>${price.credits} €</td>
-        </tr>
-        <tr>
-          <th>Machine types:</th>
-        </tr>
+      <div class="grid-container">
+        <div class="grid-header">Support credits:</div>
+        <div>
+          <input
+            type="number"
+            min="1"
+            .value=${order.credits}
+            @input=${(e) => {
+              this.order.credits = parseInt(e.target.value);
+              this.updatePrice();
+            }}
+          />
+        </div>
+        <div>${price.credits} €</div>
+
+        <div class="grid-header grid-span-row">Machine types:</div>
+
         ${order.machines.map(
           (machine, index) => html`
-            <tr>
-              <td colspan="2" class="machine-row">
-                <div class="machine-details">
-                  <label for="quantity-${index}">Qty:</label>
-                  <input
-                    id="quantity-${index}"
-                    type="number"
-                    min="1"
-                    .value=${machine.quantity}
-                    @input=${(e) => {
-                      machine.quantity = parseInt(e.target.value);
-                      this.updatePrice();
-                    }}
-                  />
+            <div class="machine-row machine-details" style="grid-column: span 2;">
+              <button
+                class="remove-button"
+                title="Remove"
+                @click=${() => {
+                  this.order.machines.splice(index, 1);
+                  this.updatePrice();
+                }}
+              >
+                Remove
+              </button>
 
-                  <label for="cores-${index}">Cores:</label>
-                  <input
-                    id="cores-${index}"
-                    type="number"
-                    min="1"
-                    .value=${machine.cores}
-                    @input=${(e) => {
-                      machine.cores = parseInt(e.target.value);
-                      this.updatePrice();
-                    }}
-                  />
-                  <input
-                    type="checkbox"
-                    id="floating-${index}"
-                    ?checked=${machine.floating}
-                    @change=${(e) => {
-                      machine.floating = e.target.checked;
-                      this.updatePrice();
-                    }}
-                  />
-                  <label for="floating-${index}">Floating</label>
+              <label for="quantity-${index}">Qty:</label>
+              <input
+                id="quantity-${index}"
+                type="number"
+                min="1"
+                .value=${machine.quantity}
+                @input=${(e) => {
+                  machine.quantity = parseInt(e.target.value);
+                  this.updatePrice();
+                }}
+              />
 
-                  <button
-                    class="remove-button"
-                    title="Remove"
-                    @click=${() => {
-                      this.order.machines.splice(index, 1);
-                      this.updatePrice();
-                    }}
-                  >
-                    Remove
-                  </button>
-                </div>
-              </td>
-              <td>${machine.price} €</td>
-            </tr>
+              <label for="cores-${index}">Cores:</label>
+              <input
+                id="cores-${index}"
+                type="number"
+                min="1"
+                .value=${machine.cores}
+                @input=${(e) => {
+                  machine.cores = parseInt(e.target.value);
+                  this.updatePrice();
+                }}
+              />
+              <input
+                type="checkbox"
+                id="floating-${index}"
+                ?checked=${machine.floating}
+                @change=${(e) => {
+                  machine.floating = e.target.checked;
+                  this.updatePrice();
+                }}
+              />
+              <label for="floating-${index}">Floating</label>
+            </div>
+            <div>${machine.price} €</div>
           `,
         )}
 
-        <tr>
-          <td colspan="2" class="machine-row">
-            <button @click=${this.addMachine} type="button" class="add-machine" title="Add machine">
-              Add machine
-            </button>
-          </td>
-          <td></td>
-        </tr>
+        <div class="machine-row grid-span-row">
+          <button @click=${this.addMachine} type="button" class="add-machine" title="Add machine">
+            Add machine
+          </button>
+        </div>
 
-        <tr>
-          <th>Discount:</th>
-          <td></td>
-          <td>${price.discount} €</td>
-        </tr>
-        <tr>
-          <th>Total:</th>
-          <td></td>
-          <td><strong>${price.total} € / month</strong></td>
-        </tr>
-      </table>
+        <div class="grid-separator"></div>
+
+        <div class="grid-header">Discount:</div>
+        <div></div>
+        <div>${price.discount} €</div>
+
+        <summary>
+          <div class="grid-header">Total:</div>
+          <div></div>
+          <div><strong>${price.total} € / month</strong></div>
+        </summary>
+      </div>
     `;
   }
 }
