@@ -158,7 +158,7 @@ export class CalculatorApp extends LitElement {
     return html`
       <h2>About you</h2>
 
-      Are you a freelancer / 1 person company?
+      Are you a freelancer or a 1 person company?
 
       <input
         type="radio"
