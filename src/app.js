@@ -264,7 +264,7 @@ export class CalculatorApp extends LitElement {
         <div class="grid-separator"></div>
 
         <div class="grid-header">Discount:</div>
-        <div></div>
+        <div>${price.bundle?.name}</div>
         <div>${price.discount} €</div>
 
         <summary>
